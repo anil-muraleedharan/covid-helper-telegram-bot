@@ -1,0 +1,5 @@
+fileignoreconfig:
+- filename: package-lock.json
+  checksum: be41ea352f4e95ee04177afcbec025ec22b4d656a952dc01be6c2bd9e2313edd
+- filename: src/handlers.js
+  checksum: 963765c925c6fba34f663f32572b668684badc12d3f1204ef4732e5dca78eb5a
