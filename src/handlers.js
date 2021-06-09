@@ -2,7 +2,7 @@ const { getStates, getDistricts, getAvailableSessionsByDist } = require('./api')
 
 const logger = (ctx, next) => {
   const message = ctx.match ? ctx.match.input : ctx.update.message.text;
-  console.info(`${message} - ${ctx.from.first_name} - ${ctx.from.id} ${Date.now()}`);
+  console.info(`${message} - ${ctx.from.first_name} - ${ctx.from.id} ${new Date().toLocaleString()}`);
   next();
 }
 
