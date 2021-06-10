@@ -8,9 +8,12 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const schedules = require('./schedules.json');
 
+let informedSessions = [[], [], []];
+
 const formatSessionMessage = (session) => {
-  const { date, available_capacity, available_capacity_dose1, available_capacity_dose2, min_age_limit, vaccine } = session;
-  if (available_capacity <= 0) return '';
+  const { date, available_capacity, available_capacity_dose1, available_capacity_dose2, min_age_limit, vaccine, session_id } = session;
+  if (available_capacity <= 0 || informedSessions.flat().includes(session_id)) return '';
+  informedSessions[informedSessions.length - 1].push(session_id);
   let msg = '';
   msg += '```\n\n';
   msg += `Date    - ${date}\n`
@@ -40,12 +43,20 @@ const formatAndSendMessage = ({ centers }, username, userId) => {
   });
 }
 
+const setUpInformedSessionList = () => {
+  informedSessions.shift();
+  informedSessions.push([]);
+}
+
 fetchDataAndNotify = ({ districtId, name, userId }) => {
   console.log(`Started the schedule for ${name} ${userId}`, new Date().toLocaleString())
   getAvailableSessionsByDist(districtId).then((res) => {
     console.log("Fetched Data");
+    setUpInformedSessionList();
     formatAndSendMessage(res, name, userId);
   }).catch(console.log);
 }
 
-setInterval(() => schedules.forEach(fetchDataAndNotify), 0.5 * 60 * 1000);
+setInterval(() => schedules.forEach(fetchDataAndNotify), 20 * 60 * 1000);
+
+console.log("Started the bot")
